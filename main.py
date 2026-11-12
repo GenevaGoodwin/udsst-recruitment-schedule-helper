@@ -32,9 +32,9 @@ def add_member (state: State) -> Page:
                         Button ("Return to Homepage", "index")])
     
 @route
-def submit_member (state: State, member_name) -> Page:
+def submit_member (state: State, member_name:str) -> Page:
     state.active_member = member_name
-    return Page(add_course)
+    return add_course(state)
 
 @route
 def add_course (state: State) -> Page:
@@ -48,7 +48,7 @@ def add_course (state: State) -> Page:
 def submit_course (state:State, class_name: str, class_start: str, class_end: str) -> Page:
     new_course = Course(class_name, Time(class_start, class_end))
     state.team.append(TeamMember(state.active_member, [new_course]))
-    return Page(add_course)
+    return add_course(state)
 
 @route
 def group_availability (state: State) ->Page:
@@ -56,6 +56,19 @@ def group_availability (state: State) ->Page:
                 "Must leave early:",
                 "Must arrive late:"])
 
+@route
+def add_to_main_schedule (state: State) -> Page:
+    return Page(state, ["Activity Name:", TextBox("activity_name"),
+                        "Activity Start Time:", TextBox("activity_start"),
+                        "Activity End Time:", TextBox("activity_end"),
+                        Button("Submit Activity", "submit_activity"), Button("Return to Homepage", "index")
+                        ])
+
+@route
+def submit_activity (state:State, activity_name: str, activity_start: str, activity_end: str) -> Page:
+    new_activity = Activity(activity_name, Time(activity_start, activity_end))
+    state.main_schedule.append(Activity(new_activity))
+    return add_to_main_schedule(state)
 
 
 @route
@@ -63,3 +76,5 @@ def index (state: State) -> Page:
     return Page(state, [Button("Add Team Member", "add_member"),
                         Button("Add Main Schedule", "add_to_main_schedule"),
                         Button("View Group Availability", "group_availability")])
+        
+start_server(State([],[],""))
