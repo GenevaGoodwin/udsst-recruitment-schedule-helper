@@ -57,9 +57,9 @@ def single_activity_availability_checker (activity: Activity, team_member:TeamMe
 def activity_checker (state: State) -> list[Availability]:
     current_team_availability = ""
     if not state.team:
-        return team_availabilities
+        return []
     if not state.activities:
-        return team_availabilities
+        return []
     for activity in state.activities:
         current_team_availability = ""
         for team_member in state.team:
